@@ -1,111 +1,12 @@
 #include <iostream>
 #include <string>
-#include <math.h> //pow(a,b) == a^b
-#include <conio.h> //system("cls), _getch()
+#include <windows.h>
+#include <math.h>
+#include "Polynomial.hpp"
+#include <conio.h> 
 using namespace std;
 
 
-class Polynominal {
-private:
-	double *data;
-	int step;
-public:
-	void set_coef(double value,int id){
-		this->data[id] = value;
-	}
-	void set_step(int step) {
-		this->step = step;
-		this->data = new double[step+1];
-	}
-	int get_step() {
-		return step;
-	}
-	double get_coef(int id) {
-		if ((id > step) || (id < 0)) {
-			return 0;
-		}
-		else{ 
-			return data[id]; 
-		}
-	}
-	Polynominal() {
-		this->step = 0+1;
-		this->data = new double[0];
-	}
-	double & operator[](int id) {
-		if ((id < 0) || (id > step)) {
-			int newid;
-			cout << "Неккоректный ввод index введите новый индекс: ";
-			cin >> newid;
-			return (*this)[newid];
-		}
-		else {
-			return data[id]; 
-		}
- 	}
-	void Print() {
-		for (int i = 0; i <step+1; i++) {
-			if (data[i] == 0) {
-				cout << "";
-			}
-			else if (i == 0) {
-				cout << get_coef(i) <<" + ";
-			}
-			else if (i == 1) {
-				cout << get_coef(i) << "x "<<" + ";
-			}
-			else if (i==step){
-				cout << get_coef(i)<<"x^"<< i;
-			}
-			else {
-				cout << get_coef(i) <<"x^"<<i<< " + ";
-			}
-		}
-	}
-	int maximum(int a, int b) {
-		if (a > b) {
-			return a;
-		}
-		else {
-			return b;
-		}
-	}
-	Polynominal & operator+( Polynominal other) {
-		int maxStep = maximum(this->step, other.step);
-		Polynominal temp;
-		temp.set_step(maxStep);
-		for (int i = 0; i <= maxStep;i++) {
-			temp.set_coef(this->get_coef(i) + other.get_coef(i), i);
-		}
-		return temp;
-	}
-	Polynominal& operator-(Polynominal other) {
-		int maxStep = maximum(this->step, other.step);
-		Polynominal temp;
-		temp.set_step(maxStep);
-		for (int i = 0; i <= maxStep; i++) {
-			temp.set_coef(this->get_coef(i) - other.get_coef(i), i);
-		}
-		return temp;
-	}
-	Polynominal& operator*(double value) {
-		Polynominal temp;
-		temp.set_step(this->step);
-		for (int i = 0; i <= this->step; i++) {
-			temp.set_coef(this->get_coef(i) * value, i);
-		}
-		return temp;
-	}
-
-	double valueX(double x) {
-		double summ=0;
-		for (int i = 0; i < step + 1; i++) {
-			summ+=(data[i]*pow(x,i));
-		}
-		return summ;
-	}
-
-};
 
 int menu1() {
 	cout << "\n\t'->' - Cледуюий элемент\n\t'<-' - предыдуший элемент";//77 75 ok===============
@@ -116,12 +17,12 @@ int menu1() {
 	cout << "\n\t[5] - разность двух матриц";//53 ОК============================================
 	cout << "\n\t[6] - умножить матрицу на вещественное число";//54 ОК==========================
 	cout << "\n\t[7] - обратиться к коэффициенту по индексу";//55 ОК
-	cout << "\n\t[7] - поиска корней 1 и 2 степеней";//56
+	cout << "\n\t[8] - поиска корней 1 и 2 степеней";//56
 	cout << "\n\t[BackSpace] - удалить элемент по индексу";//8 ОК===============================
 	cout << "\n\n\tEsc - Выход";//27============================================================
 	while (true) {
 		int key = _getch();
-		if ((key == 27) || (key == 49) || (key == 50) || (key == 51) || (key == 52) || (key == 53) || (key == 54) || (key == 55) || (key == 8) || (key == 77) || (key == 75)) {
+		if ((key == 27) || (key == 49) || (key == 50) || (key == 51) || (key == 52) || (key == 53) || (key == 54) || (key == 55) ||(key==56)|| (key == 8) || (key == 77) || (key == 75)) {
 			return key;
 		}
 	}
@@ -251,6 +152,25 @@ void multiplication(Polynominal coll) {
 	cout << "\n\n\t\t\tНАЖМИТЕ ЛЮБУЮ КЛАВИШУ ЧТОБЫ ПРОДОЛЖИТЬ ";
 	_getch();
 }
+void roots(Polynominal* coll) {
+	system("cls");
+	double len;
+	double* tmp= new double[2];
+	cout << "\n\n\n\t\t\t ";
+	coll->Print();
+	cout << " = 0 \tкорень  = ";
+	try {
+		len = coll->equation_roots(tmp);
+		for (int i = 0; i < len; i++) {
+			cout << "x" << i + 1 << " = " << tmp[i]<<" ";
+		}
+	}
+	catch (string prob) {
+		cout <<"\n\n\n\t\t\t\t" << prob;
+	}
+	delete[] tmp;
+}
+void 
 
 int main() {
 	setlocale(LC_ALL, "RUS");
@@ -270,6 +190,14 @@ menu1:
 		case 51:
 			goto menu1;
 		case 52:
+			goto menu1;
+		case 53:
+			goto menu1;
+		case 54:
+			goto menu1;
+		case 55:
+			goto menu1;
+		case 56:
 			goto menu1;
 		case 8:
 			goto menu1;
@@ -329,7 +257,10 @@ menu1:
 		case 55:// обратиться к коэффициенту по индексу
 			goto menu1;
 		case 56://поиска корней 1 и 2 степеней
-
+			roots(collection[i]);
+			cout << "\n\n\t\t\tНАЖМИТЕ ЛЮБУЮ КЛАВИШУ ЧТОБЫ ПРОДОЛЖИТЬ ";
+			_getch();
+			goto menu1;
 		case 75:// стрелочки ОК==========================================
 			if (i == 0) {
 				goto menu1;
