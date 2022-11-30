@@ -1,2 +1,5 @@
 CMakeLists.txt
 build
+main.exe
+.vscode
+Polynomial.exe
