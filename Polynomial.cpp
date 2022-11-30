@@ -148,9 +148,11 @@ bool Polynominal::operator!=(Polynominal& other) const {
 		return true;
 	}
 	else {
-		int m = maximum(step, other.step);
-		for (int i = 0; i < m; i++) {
-			
+		for (int i = 0; i < step; i++) {
+			if(get_coef(i)!=other.get_coef(i)){
+				return true;
+			}
+			return false;
 		}
 	}
 }
